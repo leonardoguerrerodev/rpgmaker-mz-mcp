@@ -57,8 +57,13 @@ export function getMapPath(projectPath: string, mapId: number): string {
  */
 export async function validateProjectPath(projectPath: string): Promise<boolean> {
   try {
-    // Check if project has essential files
-    await readFile(join(projectPath, 'game.rmmzproject'), 'utf-8');
+    // Check if project has essential files.
+    // Patch MV: aceptar tanto MZ (game.rmmzproject) como MV (Game.rpgproject).
+    try {
+      await readFile(join(projectPath, 'game.rmmzproject'), 'utf-8');
+    } catch {
+      await readFile(join(projectPath, 'Game.rpgproject'), 'utf-8');
+    }
     await readFile(getDataPath(projectPath, 'System.json'), 'utf-8');
     return true;
   } catch {
